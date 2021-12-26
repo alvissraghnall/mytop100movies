@@ -1,0 +1,38 @@
+{
+  "name": "mytop100movies",
+  "version": "0.1.0",
+  "description": "Backend web application connecting to tmdb’s api and a postgresql database to enable users store, edit and update their 100 favorite movies.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon -r dotenv/config index",
+    "start:prod": "tsc build && nodemon dist/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvissraghnall/mytop100movies.git"
+  },
+  "author": "Álviss Raghnall <isiomastewart@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alvissraghnall/mytop100movies/issues"
+  },
+  "homepage": "https://github.com/alvissraghnall/mytop100movies#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.2.0",
+    "graphql-tag": "^2.12.6",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/pg": "^8.6.1",
+    "@types/pg-pool": "^2.0.3",
+    "dotenv": "^10.0.0"
+  }
+}
