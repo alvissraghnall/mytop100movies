@@ -32,8 +32,8 @@ export default async function (req: Request, res: Response) {
       const rT = refreshToken(payload), aT = accessToken(payload);
       return res
         .set("Content-Type", "text/plain; charset=utf-8")
-        .cookie("X-Refresh-Token", rT, { httpOnly: true})
-        .append("X-ACCESS-TOKEN", aT)
+        .cookie("X-Refresh-Token", await rT, { httpOnly: true})
+        .append("X-ACCESS-TOKEN", await aT)
         .status(201)
         .send("User login successful.");
     } else {

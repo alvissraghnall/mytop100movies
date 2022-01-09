@@ -11,11 +11,15 @@ const file = (filePath: string): Promise<string> => {
   });
 }
 
-const privateKey = file(__dirname + "jwt.key");
+const key = readFile(__dirname.slice(-4) + "jwt.key", "utf8", async (err, data) => {
+  if(err) throw err;
+  return await data;
+})
 
-export function refreshToken(payload: Payload) {
+const privateKey = file(__dirname.slice(-4) + "jwt.key");
+
+export async function refreshToken(payload: Payload) {
   console.log(__dirname);
-  rf();
   const token = sign(payload, await privateKey, {
     expiresIn: "3h",
     algorithm: "RS256",
@@ -23,8 +27,7 @@ export function refreshToken(payload: Payload) {
   return token;
 }
 
-export function accessToken(payload: Payload) {
-  rf()
+export async function accessToken(payload: Payload) {
   const token = sign(payload, await privateKey, {
     expiresIn: "10m",
     algorithm: "RS256",
