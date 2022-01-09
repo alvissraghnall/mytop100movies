@@ -1,0 +1,8 @@
+const path = require('path');
+
+module.exports = {
+  "config": path.resolve('./sqlize/config', 'config.json'),
+  "models-path": path.resolve('./sqlize/models'),
+  "seeders-path": path.resolve('./sqlize/seeders'),
+  "migrations-path": path.resolve('./sqlize/migrations')
+};

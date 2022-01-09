@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { route1, route2, register } from "./routes/index";
-//import routeUn from "./routes/route1";
+import routes from "./routes/index";
+import {route1, route2} from "./routes/index";
 
 const router = Router();
 
@@ -8,6 +8,8 @@ router.use((req, res, next) => {
   console.log('Time: ', Date.now() / 1000);
   next();
 });
+
+router.use(routes);
 
 router.get('/', function(req, res) {
   res.send('home page');
@@ -22,8 +24,5 @@ router.get("/ram", (req, res) => {
 })
 router.use("/1", route1);
 router.get("/2", route2);
-
-
-router.post("/register", async (req, res) => register(req, res));
 
 export default router;
