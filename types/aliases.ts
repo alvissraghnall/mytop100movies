@@ -20,12 +20,4 @@ export interface DBable {
   Sequelize: Sequelize;
 }
 
-export type Payload = {
-  iss: string,
-  aud: string,
-  sub: string,
-  sub_n: string,
-  iat: number,
-  exp: number,
-  prm: string
-}
+export type Payload = Record<"iss" | "sub" | "sub_n" | "prm", string>;

@@ -18,9 +18,6 @@ export default async function (req: Request, res: Response) {
     const pwd = data.dataValues.password;
     const payload: Payload = {
       iss: "mytop100movies",
-      iat: Date.now(),
-      aud: "mytop100movies_user",
-      exp: Date.now() + 24 * 3600000,
       sub: data.dataValues.id,
       sub_n: data.dataValues.name,
       prm: createHash("sha256").update(randomBytes(16)).digest('hex')
