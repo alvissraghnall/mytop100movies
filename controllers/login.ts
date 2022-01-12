@@ -13,6 +13,12 @@ import { createHash, randomBytes } from "crypto";
 export default async function (req: Request, res: Response) {
   
   try {
+    //console.log(req.headers["Authentication"], req.headers["x-access-token"], req.headers);
+    if(req.headers["x-access-token"]){
+      req.method = "GET";
+      req.body = {}
+      return res.redirect(303, "/list");
+    }
     const destructured = destructure(req);
     const data = await query(destructured.email);
     const pwd = data.dataValues.password;
@@ -34,7 +40,7 @@ export default async function (req: Request, res: Response) {
         .status(201)
         .send("User login successful.");
     } else {
-      res.status(401).send(unauthorized_error);
+      return res.status(401).send(unauthorized_error);
     }
   } catch (err) {
     const error = <Error>err;

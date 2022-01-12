@@ -1,6 +1,5 @@
 import { Router } from "express";
 import routes from "./routes/index";
-import {route1, route2} from "./routes/index";
 
 const router = Router();
 
@@ -22,7 +21,5 @@ router.get('/about', function(req, res) {
 router.get("/ram", (req, res) => {
   res.send("hahahah");
 })
-router.use("/1", route1);
-router.get("/2", route2);
 
 export default router;

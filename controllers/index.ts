@@ -1,9 +1,10 @@
 import login from "./login";
 import register from "./register";
-import list from "./list"
+import list__get from "./list-get"
 
 export {
   login,
   register,
-  list
+  list__get,
+  
 }
