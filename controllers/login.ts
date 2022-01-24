@@ -4,16 +4,16 @@ import type { Request, Response } from "express";
 import { server_error, unauthorized_error } from "../util/error";
 import type { login } from "../types/aliases";
 import db from "../sqlize/models/";
-import { accessToken, refreshToken } from "../util/jwt-token";
+import { signToken } from "../util/jwt-token";
 import { Payload } from '../types/aliases';
 import { createHash, randomBytes } from "crypto";
-
 
 
 export default async function (req: Request, res: Response) {
   
   try {
     //console.log(req.headers["Authentication"], req.headers["x-access-token"], req.headers);
+    const prm =  createHash("sha256").update(randomBytes(16)).digest('hex');
     if(req.headers["x-access-token"]){
       req.method = "GET";
       req.body = {}
@@ -26,13 +26,13 @@ export default async function (req: Request, res: Response) {
       iss: "mytop100movies",
       sub: data.dataValues.id,
       sub_n: data.dataValues.name,
-      prm: createHash("sha256").update(randomBytes(16)).digest('hex')
+      prm
     }
     if(pwd) {
       const check = await verifyHash(destructured.password, pwd);
       console.log(check);
       if(check === false) return res.status(401).send("The password you entered is incorrect. Please check, and try again.");
-      const rT = refreshToken(payload), aT = accessToken(payload);
+      const rT = signToken(payload, "4h"), aT = signToken(payload, "15m");
       return res
         .set("Content-Type", "text/plain; charset=utf-8")
         .cookie("X-Refresh-Token", await rT, { httpOnly: true})
