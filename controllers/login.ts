@@ -14,7 +14,8 @@ export default async function (req: Request, res: Response) {
   try {
     //console.log(req.headers["Authentication"], req.headers["x-access-token"], req.headers);
     const prm =  createHash("sha256").update(randomBytes(16)).digest('hex');
-    if(req.headers["x-access-token"]){
+    console.log(req.headers);
+    if(req.headers["authentication"]){
       req.method = "GET";
       req.body = {}
       return res.redirect(303, "/list");
@@ -36,7 +37,7 @@ export default async function (req: Request, res: Response) {
       return res
         .set("Content-Type", "text/plain; charset=utf-8")
         .cookie("X-Refresh-Token", await rT, { httpOnly: true})
-        .append("X-ACCESS-TOKEN", await aT)
+        .set("Authentication", "Bearer " + await aT)
         .status(201)
         .send("User login successful.");
     } else {
