@@ -12,8 +12,8 @@ const file = (filePath: string): Promise<string> => {
   });
 }
 
-const privateKey = file(__dirname.slice(0, -4) + "jwt.key");
-const publicKey = file(__dirname.slice(0, -4) + "jwt.key.pub");
+const privateKey = file(__dirname.slice(0, -4) + "jwtRS256.key");
+const publicKey = file(__dirname.slice(0, -4) + "jwtRS256.key.pub");
 
 export async function signToken(payload: Payload, exp: string): Promise<string> {
   const token = sign(payload, await privateKey, {
@@ -34,6 +34,7 @@ export async function accessToken(payload: Payload): Promise<string> {
 */
 
 export async function verifyToken(token: string): Promise<string | JwtPayload> {
+  //console.log(privateKey, publicKey);
   const payload = verify(token, await publicKey, {
     algorithms: ["RS256"],
   });

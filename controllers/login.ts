@@ -14,7 +14,7 @@ export default async function (req: Request, res: Response) {
   try {
     //console.log(req.headers["Authentication"], req.headers["x-access-token"], req.headers);
     const prm =  createHash("sha256").update(randomBytes(16)).digest('hex');
-    console.log(req.headers);
+    console.log(req.headers, "\n\n", req.headers["authentication"]);
     if(req.headers["authentication"]){
       req.method = "GET";
       req.body = {}

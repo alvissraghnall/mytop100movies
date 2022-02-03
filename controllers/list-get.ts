@@ -7,13 +7,13 @@ import { server_error } from "../util/error";
 export default async function (req: Request, res: Response): Promise<Response> {    
   const accessToken = req.headers["authentication"]?.slice(7), refreshToken = req.headers["cookie"];
   
-  console.log(accessToken, refreshToken);
+  console.log(accessToken, "\n ===== \n ===== \n ===== \n", refreshToken);
 
   try {
 
     if(accessToken){
       const payload: JwtPayload | string = await verifyToken(accessToken as string);
-      console.log(payload);
+      console.log("\n\n\n\n Payload: ", payload);
     }
     
     
