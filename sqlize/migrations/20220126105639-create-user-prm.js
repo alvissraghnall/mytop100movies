@@ -3,9 +3,9 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('User_prms', {
       id: {
-        type: DataTypes.UUIDV4,
+        type: Sequelize.UUID,
         references: {
-          model: 'user',
+          model: 'Users',
           key: 'id'
         }
       },
