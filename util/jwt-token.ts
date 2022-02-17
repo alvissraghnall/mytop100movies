@@ -35,9 +35,18 @@ export async function accessToken(payload: Payload): Promise<string> {
 
 export async function verifyToken(token: string): Promise<string | JwtPayload> {
   //console.log(privateKey, publicKey);
-  const payload = verify(token, await publicKey, {
-    algorithms: ["RS256"],
+  return new Promise((resolve, reject) => {
+    const payload = verify(token, await publicKey, {
+      algorithms: ["RS256"],
+    }, (err, payload) => {
+      if (err) {
+        return err;
+        reject(err);
+      }
+      resolve(payload);
+    });
   });
+  
   return payload;
 }
 /*

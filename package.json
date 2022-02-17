@@ -34,7 +34,6 @@
     "sequelize": "^6.12.4"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/pg": "^8.6.1",
@@ -42,4 +41,5 @@
     "dotenv": "^10.0.0",
     "sequelize-cli": "^6.3.0"
   }
+
 }
