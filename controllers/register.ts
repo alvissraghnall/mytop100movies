@@ -39,7 +39,7 @@ class Register {
       const user = await User.create({
         name, email, password
       });
-      return this.res.status(200).send(user);
+      return this.res.status(201).send("user successfully created.");
     } catch(err){
       const error = <Error>err;
       console.error(error.message);
@@ -53,7 +53,7 @@ class Register {
     const _email = email.toLowerCase();
     const checkMail = await instance.checkEmail(_email);
     if(checkMail){
-      return instance.res.status(403).send(mail_exists);
+      return instance.res.status(401).send(mail_exists);
     }
     return await instance.query(name, _email, password);
   }

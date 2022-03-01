@@ -5,6 +5,7 @@ import type { JwtPayload } from "jsonwebtoken";
 import { server_error } from "../util/error";
 
 export default async function (req: Request, res: Response): Promise<Response> {    
+  // slice out "Bearer " from access token
   const accessToken = req.headers["authentication"]?.slice(7), refreshToken = req.headers["cookie"];
   
   console.log(accessToken, "\n ===== \n ===== \n ===== \n", refreshToken);
@@ -12,7 +13,7 @@ export default async function (req: Request, res: Response): Promise<Response> {
   try {
 
     if(accessToken){
-      const payload: JwtPayload | string = await verifyToken(accessToken as string);
+      const payload: JwtPayload | string | undefined = await verifyToken(accessToken as string);
       console.log("\n\n\n\n Payload: ", payload);
     }
     

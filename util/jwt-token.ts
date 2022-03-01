@@ -1,4 +1,4 @@
-import { sign, verify } from "jsonwebtoken";
+import { sign, verify, TokenExpiredError } from "jsonwebtoken";
 import type { JwtPayload, Jwt } from "jsonwebtoken"
 import { readFile } from "fs";
 import type { Payload } from "../types/aliases";
@@ -33,21 +33,24 @@ export async function accessToken(payload: Payload): Promise<string> {
 }
 */
 
-export async function verifyToken(token: string): Promise<string | JwtPayload> {
+export async function verifyToken(token: string): Promise<string | JwtPayload | undefined> {
+  const pk = await publicKey;
   //console.log(privateKey, publicKey);
   return new Promise((resolve, reject) => {
-    const payload = verify(token, await publicKey, {
+    verify(token, pk, {
       algorithms: ["RS256"],
     }, (err, payload) => {
       if (err) {
-        return err;
+        const e = <Error>err;
+        if(err instanceof TokenExpiredError) console.error(e);
+        console.log("error: ", err);
         reject(err);
       }
       resolve(payload);
     });
   });
   
-  return payload;
+  //return payload;
 }
 /*
 export async function verifyAccessToken(token: string): Promise<JwtPayload | string> {
