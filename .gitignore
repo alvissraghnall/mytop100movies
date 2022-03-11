@@ -5,6 +5,5 @@ dist
 *.key
 *.pub
 *.lock
-hello
-*.o
-*.s
+*.pem
+hello**

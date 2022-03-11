@@ -12,8 +12,8 @@ const file = (filePath: string): Promise<string> => {
   });
 }
 
-const privateKey = file(__dirname.slice(0, -4) + "jwtRS256.key");
-const publicKey = file(__dirname.slice(0, -4) + "jwtRS256.key.pub");
+const privateKey = file(__dirname.slice(0, -4) + "private.pem");
+const publicKey = file(__dirname.slice(0, -4) + "public.pem");
 
 export async function signToken(payload: Payload, exp: string): Promise<string> {
   const token = sign(payload, await privateKey, {
@@ -42,9 +42,12 @@ export async function verifyToken(token: string): Promise<string | JwtPayload | 
     }, (err, payload) => {
       if (err) {
         const e = <Error>err;
-        if(err instanceof TokenExpiredError) console.error(e);
-        console.log("error: ", err);
-        reject(err);
+        //if(e instanceof TokenExpiredError) {
+        //  console.error(e);
+          reject(e);
+        //}
+        //console.log("error: ", e);
+        //reject(err);
       }
       resolve(payload);
     });

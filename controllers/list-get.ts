@@ -1,28 +1,17 @@
 import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
+import { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import { verifyToken } from "../util/jwt-token";
 import type { JwtPayload } from "jsonwebtoken";
 import { server_error } from "../util/error";
+import { Payload } from "../types/aliases";
 
 export default async function (req: Request, res: Response): Promise<Response> {    
-  // slice out "Bearer " from access token
-  const accessToken = req.headers["authentication"]?.slice(7), refreshToken = req.headers["cookie"];
-  
-  console.log(accessToken, "\n ===== \n ===== \n ===== \n", refreshToken);
-
   try {
-
-    if(accessToken){
-      const payload: JwtPayload | string | undefined = await verifyToken(accessToken as string);
-      console.log("\n\n\n\n Payload: ", payload);
-    }
+    let payload: Payload;
     
+    payload = payload.sub;
     
-    //console.log(accessToken, req.cookies);
-    return res.json({
-      header: accessToken,
-      method: req.method
-    });
   
   } catch(err: unknown) {
     const error = <Error> err;

@@ -5,3 +5,16 @@ export let unauthorized_error = "Invalid email, please check and try again. And 
 export let validator_403_middleware = "Missing credentials. Please fill out all fields.";
 
 export let mail_exists = "Email already exists. Please check the email, and try again, or create a new account."
+
+export class InvalidAccessTokenError extends Error {
+  
+  constructor() {
+    super("Token Invalid.");
+  }
+}
+
+export class NoTokenProvidedError extends Error {
+  constructor() {
+    super("No (jwt) token provided in your request. Provide one, to authenticate.");
+  }
+}
