@@ -1,11 +1,12 @@
 import { scrypt } from "crypto";
 import pool from '../util/pg';
 import type { Request, Response } from "express";
-import { server_error, unauthorized_error } from "../util/error";
+import { server_error, unauthorized_error, NoUserFound } from "../util/error";
 import type { login } from "../types/aliases";
 import db from "../sqlize/models/";
 import { signToken } from "../util/jwt-token";
 import { Payload } from '../types/aliases';
+import { HttpStatusCodes } from '../types/headers';
 import { createHash, randomBytes } from "crypto";
 
 
@@ -22,6 +23,9 @@ export default async function (req: Request, res: Response) {
     }
     const destructured = destructure(req);
     const data = await query(destructured.email);
+    if(!data) {
+      throw new NoUserFound();
+    }
     const pwd = data.dataValues.password;
     const payload: Payload = {
       iss: "mytop100movies",
@@ -45,6 +49,9 @@ export default async function (req: Request, res: Response) {
     }
   } catch (err) {
     const error = <Error>err;
+    if(error instanceof NoUserFound) {
+      return res.status(HttpStatusCodes.BAD_REQUEST).send(error.message);
+    }
     console.error(error.message);
     res.status(500).send(server_error);
   }

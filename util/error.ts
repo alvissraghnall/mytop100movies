@@ -18,3 +18,9 @@ export class NoTokenProvidedError extends Error {
     super("No (jwt) token provided in your request. Provide one, to authenticate.");
   }
 }
+
+export class NoUserFound extends Error {
+  constructor() {
+    super("No user with email provided found. Please register, or confirm the email address provided.");
+  }
+}

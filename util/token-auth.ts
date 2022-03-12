@@ -1,17 +1,21 @@
 import type { Request, Response, NextFunction } from "express";
 import { InvalidAccessTokenError, NoTokenProvidedError, server_error } from "./error";
-import { HttpHeaders } from "../types/headers";
-import { verifyToken } from "./jwt-token";
+import { HttpStatusCodes } from "../types/headers";
+import { verifyToken, signToken } from "./jwt-token";
 import { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 
 
-export default async function tokenAuth(req: Request, res: Response) {
-  const BEARER: string = "BEARER";
+export default async function tokenAuth(req: Request, res: Response, next: NextFunction) {
+  const BEARER: string = "Bearer";
   const XRT: string = "X-Refresh-Token=";
+  const fromCookie = req.headers["cookie"];
+  const refreshToken = fromCookie?.replace(XRT, "");
+
+
+  let payload;
 
   try {
-    const fromAuthHeader = req.headers["authentication"],
-      fromCookie = req.headers["cookie"];
+    const fromAuthHeader = req.headers["authentication"]
     let accessToken;
     
     if(typeof fromAuthHeader == "string") {
@@ -19,29 +23,45 @@ export default async function tokenAuth(req: Request, res: Response) {
     } else {
       accessToken = fromAuthHeader?.forEach(token => token.replace(BEARER, "").trim());
     }
+    
+    //console.log(fromAuthHeader, typeof fromAuthHeader, accessToken);
 
-    const refreshToken = fromCookie?.replace(XRT, "");
 
     if (!accessToken && !refreshToken) {
       throw new NoTokenProvidedError();
     }
     if(accessToken) {
-      const payload = await verifyToken(accessToken as string);
+      payload = await verifyToken(accessToken as string);
     }
     
-    
-    return next(payload);
+    res.locals.payload = payload;
+    return next();
     
   } catch (e) {
     const err = e as Error;
     if(err instanceof NoTokenProvidedError) {
-      res.status(HttpHeaders.FORBIDDEN).send(err.message)
+      res.status(HttpStatusCodes.FORBIDDEN).send(err.message)
     }
     else if (err instanceof TokenExpiredError) {
-      return res.status(HttpHeaders.BAD_REQUEST).send(err.message);
+      if(refreshToken) {
+        try {
+          let newToken: string;
+          const pl = await verifyToken(refreshToken);
+          if(pl) {
+            newToken = await signToken(pl, "15m");
+            req.headers.authentication = BEARER + " " + newToken;
+            res.redirect(HttpStatusCodes.REDIRECT, "/login");
+          } 
+        } catch (_err) {
+          const error = _err as Error;
+          return res.status(HttpStatusCodes.BAD_REQUEST).send(error.message);
+        }
+      }
+      return res.status(HttpStatusCodes.BAD_REQUEST).send(err.message);
     } else if (err instanceof JsonWebTokenError) {
-      return res.status(HttpHeaders.INTERNAL_SERVER_ERROR).send(server_error);
+      return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
     }
+    return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(server_error)
   }
 
 }

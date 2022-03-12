@@ -15,7 +15,7 @@ const file = (filePath: string): Promise<string> => {
 const privateKey = file(__dirname.slice(0, -4) + "private.pem");
 const publicKey = file(__dirname.slice(0, -4) + "public.pem");
 
-export async function signToken(payload: Payload, exp: string): Promise<string> {
+export async function signToken(payload: Payload | JwtPayload, exp: string): Promise<string> {
   const token = sign(payload, await privateKey, {
     expiresIn: exp,
     algorithm: "RS256",
@@ -33,7 +33,7 @@ export async function accessToken(payload: Payload): Promise<string> {
 }
 */
 
-export async function verifyToken(token: string): Promise<string | JwtPayload | undefined> {
+export async function verifyToken(token: string): Promise<JwtPayload | undefined> {
   const pk = await publicKey;
   //console.log(privateKey, publicKey);
   return new Promise((resolve, reject) => {
