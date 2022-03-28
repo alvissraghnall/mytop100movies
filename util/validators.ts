@@ -20,7 +20,7 @@ export default class Validators {
     const { name, email, password } = req.body;
     if(![name, email, password].every(Boolean)){
       res.set('cOnTeNt-TyPe', 'tExT/PlAiN');
-      return res.send(validator_403_middleware);
+      return res.status(403).send(validator_403_middleware);
     } else if(!Validators.valid_email(email)){
       return res.type('plain').status(403).send(Validators.text_403);
     }

@@ -50,16 +50,16 @@ export default async function tokenAuth(req: Request, res: Response, next: NextF
           if(pl) {
             newToken = await signToken(pl, "15m");
             req.headers.authentication = BEARER + " " + newToken;
-            res.redirect(HttpStatusCodes.REDIRECT, "/login");
+            return res.redirect(HttpStatusCodes.REDIRECT, "/login");
           } 
         } catch (_err) {
           const error = _err as Error;
-          return res.status(HttpStatusCodes.BAD_REQUEST).send(error.message);
+          return res.status(HttpStatusCodes.BAD_REQUEST).json(error);
         }
       }
-      return res.status(HttpStatusCodes.BAD_REQUEST).send(err.message);
+      return res.status(HttpStatusCodes.BAD_REQUEST).json({...err, type: typeof err});
     } else if (err instanceof JsonWebTokenError) {
-      return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
+      return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json(err);
     }
     return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(server_error)
   }
